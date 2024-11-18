@@ -5,29 +5,38 @@ import { images } from "../../constants"
 import SearchInput from '@/components/SearchInput'
 import Trending from '@/components/Trending'
 import EmptyState from '@/components/EmptyState'
-import { getAllPosts } from '@/lib/appwrite'
+import { getAllPosts, getLatestPosts } from '@/lib/appwrite'
+import { useAppwrite } from '@/lib/useAppwrite'
+import VideoCard from '@/components/videoCard'
+import { LatestPost } from '@/types/type'
 
 const Home = () => {
+    const { data: posts, refetch } = useAppwrite(getAllPosts())
+    const { data: latestPosts } = useAppwrite(getLatestPosts())
+
     const [refreshing, setRefreshing] = useState(false);
-
-
-    // console.log(data);
 
     const onRefresh = async () => {
         setRefreshing(true)
-
         //fetching any new video found
+        refetch();
         setRefreshing(false);
     }
+
+    // console.log("latestPost showing", latestPosts);
+
+    const reversedPosts = posts ? [...posts].reverse() : [];
 
     return (
         <SafeAreaView className='bg-primary h-full'>
             <FlatList
-                data={[{ id: 1 }, { id: 2 }, { id: 3 }]}
-                keyExtractor={(item) => item.id.toString()}
+                data={reversedPosts}
+                keyExtractor={(item) => item.$id}
                 renderItem={({ item }) => (
                     <Text className=' text-3xl font-bold text-white'>
-                        {item.id}
+                        <VideoCard
+                            video={item}
+                        />
                     </Text>
                 )}
                 ListHeaderComponent={() => (
@@ -64,7 +73,7 @@ const Home = () => {
                             </Text>
 
                             <Trending
-                                posts={[{ id: 1 }, { id: 2 }, { id: 3 }]}
+                                posts={latestPosts}
                             />
                         </View>
 
