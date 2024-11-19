@@ -25,12 +25,12 @@ const Home = () => {
 
     // console.log("latestPost showing", latestPosts);
 
-    const reversedPosts = posts ? [...posts].reverse() : [];
+    // const reversedPosts = posts ? [...posts].reverse() : [];
 
     return (
         <SafeAreaView className='bg-primary h-full'>
             <FlatList
-                data={reversedPosts}
+                data={posts}
                 keyExtractor={(item) => item.$id}
                 renderItem={({ item }) => (
                     <Text className=' text-3xl font-bold text-white'>
